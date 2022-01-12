@@ -94,7 +94,7 @@ def convertImage(image_name, save_name):
 
 	img.putdata(newData)
 	img.save("only_edge_{}.jpg".format(save_name), "PNG")
-	print("Successful")
+	
 
 
 
@@ -121,8 +121,9 @@ def get_ready(img_org_path, save_name):
 
     ######## extracting screen #######
     for num, i in enumerate(get_crop_images(img_org, contours)[2:3]):
+        screen_img = i.copy()
         cv2.imwrite('screen'+'_{}'.format(save_name)+'.jpg', i)
-        print('screen extraction complete')
+        print('screen extraction complete, save as screen_img')
 
 
     ### screen masking
@@ -132,12 +133,15 @@ def get_ready(img_org_path, save_name):
 
     ### edge
     for num, i in enumerate(get_crop_images(screen_mask, contours)[1:2]):
-        # show(i)
         white_img = i.copy()
         cv2.imwrite('edge_only'+'_{}'.format(save_name)+'.jpg', i)
-        print('edge extraction complete')
+        print('edge extraction complete saved as white_img')
         image_name = 'edge_only'+'_{}'.format(save_name)+'.jpg'
 
     ### edge png
     convertImage(image_name, save_name)
     print('background removed')
+    png_edge = cv2.imread('only_edge_{}.jpg'.format(save_name), cv2.IMREAD_COLOR)
+    print("Successful saved as png_edge")
+
+    return screen_img, white_img, png_edge
